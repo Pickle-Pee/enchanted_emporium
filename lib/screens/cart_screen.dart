@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:enchanted_emporium/widgets/main_layout.dart';
+import 'package:enchanted_emporium/widgets/main_layout.dart'; // Импорт main_layout
 
 class CartScreen extends StatefulWidget {
   final List<Map<String, dynamic>> cart;
@@ -17,9 +17,10 @@ class _CartScreenState extends State<CartScreen> {
 
     return MainLayout(
       currentIndex: 1,
+      cart: widget.cart,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Корзина'),
+          title: Text('Cart'),
         ),
         body: widget.cart.isEmpty
             ? Center(child: Text('Корзина пуста'))

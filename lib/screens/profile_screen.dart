@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:enchanted_emporium/widgets/main_layout.dart';
+import 'package:enchanted_emporium/widgets/main_layout.dart'; // Импорт main_layout
 
 class ProfileScreen extends StatefulWidget {
+  final List<Map<String, dynamic>> cart;
+
+  ProfileScreen({required this.cart});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -51,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _changePassword() {
     // Здесь можно добавить логику для смены пароля
     // Например, проверка старого пароля и сохранение нового пароля
-    print('Пароль изменен');
+    print('Password changed');
     _oldPasswordController.clear();
     _newPasswordController.clear();
   }
@@ -60,9 +64,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return MainLayout(
       currentIndex: 2,
+      cart: widget.cart,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Профиль'),
+          title: Text('Profile'),
           actions: [
             IconButton(
               icon: Icon(_isEditing ? Icons.check : Icons.edit),
@@ -89,34 +94,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ? TextField(controller: _emailController)
                   : Text(email ?? '', style: TextStyle(fontSize: 18)),
               SizedBox(height: 16),
-              Text('Имя',
+              Text('Name',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               _isEditing
                   ? TextField(controller: _nameController)
                   : Text(name ?? '', style: TextStyle(fontSize: 18)),
               SizedBox(height: 16),
               if (_isEditing) ...[
-                Text('Изменение пароля',
+                Text('Change Password',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 TextField(
                   controller: _oldPasswordController,
-                  decoration: InputDecoration(labelText: 'Старый пароль'),
+                  decoration: InputDecoration(labelText: 'Old Password'),
                   obscureText: true,
                 ),
                 TextField(
                   controller: _newPasswordController,
-                  decoration: InputDecoration(labelText: 'Новый пароль'),
+                  decoration: InputDecoration(labelText: 'New Password'),
                   obscureText: true,
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _changePassword,
-                  child: Text('Изменить'),
+                  child: Text('Change Password'),
                 ),
               ],
               SizedBox(height: 16),
-              Text('История покупок',
+              Text('Purchase History',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Expanded(
                 child: ListView.builder(

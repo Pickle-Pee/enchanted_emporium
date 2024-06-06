@@ -6,8 +6,13 @@ import 'package:enchanted_emporium/screens/profile_screen.dart';
 class MainLayout extends StatefulWidget {
   final Widget child;
   final int currentIndex;
+  final List<Map<String, dynamic>> cart;
 
-  MainLayout({required this.child, required this.currentIndex});
+  MainLayout({
+    required this.child,
+    required this.currentIndex,
+    required this.cart,
+  });
 
   @override
   _MainLayoutState createState() => _MainLayoutState();
@@ -19,19 +24,22 @@ class _MainLayoutState extends State<MainLayout> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(
+              builder: (context) => HomeScreen(cart: widget.cart)),
         );
         break;
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => CartScreen(cart: [])),
+          MaterialPageRoute(
+              builder: (context) => CartScreen(cart: widget.cart)),
         );
         break;
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ProfileScreen()),
+          MaterialPageRoute(
+              builder: (context) => ProfileScreen(cart: widget.cart)),
         );
         break;
     }

@@ -12,6 +12,8 @@ void main() {
 }
 
 class EnchantedEmporium extends StatelessWidget {
+  final List<Map<String, dynamic>> _cart = [];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,12 +24,12 @@ class EnchantedEmporium extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => SplashScreen(),
-        '/home': (context) => HomeScreen(),
+        '/home': (context) => HomeScreen(cart: _cart),
         '/signup': (context) => SignUpScreen(),
         '/login': (context) => LoginScreen(),
         '/forgot_password': (context) => ForgotPasswordScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/cart': (context) => CartScreen(cart: []),
+        '/profile': (context) => ProfileScreen(cart: _cart),
+        '/cart': (context) => CartScreen(cart: _cart),
       },
     );
   }

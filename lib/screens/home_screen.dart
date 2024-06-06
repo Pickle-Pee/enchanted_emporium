@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:enchanted_emporium/widgets/search_bar.dart';
 import 'package:enchanted_emporium/widgets/drawer_menu.dart';
-import 'package:enchanted_emporium/widgets/main_layout.dart';
+import 'package:enchanted_emporium/widgets/main_layout.dart'; // Импорт main_layout
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
+  final List<Map<String, dynamic>> cart;
+
+  HomeScreen({required this.cart});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -12,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late PageController _pageController;
   int _currentPage = 0;
-  List<Map<String, dynamic>> cart = [];
   TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   List<Map<String, dynamic>> products = [
@@ -23,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {'title': 'Product 5', 'price': 69.99},
     {'title': 'Product 6', 'price': 79.99},
   ];
-  List<Map<String, dynamic>> filteredProducts = [];
+  late List<Map<String, dynamic>> filteredProducts;
 
   @override
   void initState() {
@@ -33,17 +36,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Автоматическая прокрутка
     Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < 2) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
+      if (_pageController.hasClients) {
+        if (_currentPage < 2) {
+          _currentPage++;
+        } else {
+          _currentPage = 0;
+        }
 
-      _pageController.animateToPage(
-        _currentPage,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
+        _pageController.animateToPage(
+          _currentPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+        );
+      }
     });
   }
 
@@ -81,6 +86,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _addToCart(String title, double price) {
+    setState(() {
+      widget.cart.add({'title': title, 'price': price});
+    });
+  }
+
   Widget _buildDiscountCard(String title, String discount, Color color) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
@@ -100,9 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 title,
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Padding(
@@ -149,11 +161,9 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                setState(() {
-                  cart.add({'title': title, 'price': price});
-                });
+                _addToCart(title, price);
               },
-              child: Text('В корзину'),
+              child: Text('Add to cart'),
             ),
           ),
         ],
@@ -165,6 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MainLayout(
       currentIndex: 0,
+      cart: widget.cart,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Enchanted Emporium'),
@@ -226,6 +237,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'New arrivals',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: Text('Show all'),
+                              ),
+                            ],
+                          ),
                           GridView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
